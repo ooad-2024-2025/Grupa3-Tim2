@@ -1,0 +1,153 @@
+@{
+  ViewData["Title"] = "Account settings - Account";
+    var user = ViewBag.User as ApplicationUser;
+}
+
+
+@section PageScripts {
+  <script src="~/js/pages-account-settings-account.js"></script>
+}
+
+@* ************** Content ************** *@
+<div class="row">
+  <div class="col-md-12">
+    <div class="nav-align-top">
+      <ul class="nav nav-pills flex-column flex-md-row mb-6 gap-2 gap-lg-0">
+        <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="ri-group-line me-1_5"></i>Account</a></li>
+      </ul>
+    </div>
+    <div class="card mb-6">
+      <!-- Account -->
+     
+      <div class="card-body pt-0">
+                
+            
+                <form asp-action="SaveProfile" method="post" enctype="multipart/form-data">
+                    <div class="row g-4 mt-1">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start align-items-sm-center gap-6">
+                                <img src="@(Url.Content(user?.AvatarPath ?? "/img/avatars/1.png"))"
+                                     alt="user-avatar"
+                                     class="rounded"
+                                     style="width: 100px; height: 100px; object-fit: cover;"
+                                     id="uploadedAvatar" />
+
+                                <div class="button-wrapper">
+                                    <label for="upload" class="btn btn-sm btn-primary me-3 mb-4" tabindex="0">
+                                        <span class="d-none d-sm-block">Upload new photo</span>
+                                        <i class="ri-upload-2-line d-block d-sm-none"></i>
+                                        <input type="file" id="upload" name="AvatarImage" class="account-file-input" hidden accept="image/png, image/jpeg" />
+
+                                    </label>
+                                    <button type="button" class="btn btn-sm btn-outline-danger account-image-reset mb-4">
+                                        <i class="ri-refresh-line d-block d-sm-none"></i>
+                                        <span class="d-none d-sm-block">Reset</span>
+                                    </button>
+
+                                    <div>Allowed JPG, GIF or PNG. Max size of 800K</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline">
+                                <input type="text" class="form-control" name="Ime" value="@user?.Ime" />
+                                <label for="Ime">First Name</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline">
+                                <input type="text" class="form-control" name="Prezime" value="@user?.Prezime" />
+                                <label for="Prezime">Last Name</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline">
+                                <input type="text" class="form-control" name="Email" value="@user?.Email" />
+                                <label for="Email">Email</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline">
+                                <input type="text" class="form-control" name="BrTelefona" value="@user?.BrTelefona" />
+                                <label for="BrTelefona">Phone Number</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-floating form-floating-outline">
+                                <input type="text" class="form-control" name="Adresa" value="@user?.Adresa" />
+                                <label for="Adresa">Address</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline">
+                                <input type="text" class="form-control" value="@user?.VrstaKorisnika" readonly />
+                                <label>Role</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary me-3">Save changes</button>
+                        <button type="reset" class="btn btn-outline-secondary">Reset</button>
+                    </div>
+                </form>
+
+      </div>
+      <!-- /Account -->
+    </div>
+    <div class="card">
+      <h5 class="card-header">Delete Account</h5>
+      <div class="card-body">
+        <div class="mb-3 col-12 mb-0">
+          <div class="alert alert-warning">
+            <h6 class="alert-heading mb-1">Are you sure you want to delete your account?</h6>
+            <p class="mb-0">Once you delete your account, there is no going back. Please be certain.</p>
+          </div>
+        </div>
+                <form asp-action="DeleteConfirmed" asp-controller="AppUser" method="post">
+                    <div class="form-check mb-6 ms-3">
+                        <input class="form-check-input" type="checkbox" name="accountActivation" id="accountActivation" required />
+                        <label class="form-check-label" for="accountActivation">I confirm my account deactivation</label>
+                    </div>
+                    <button type="submit" class="btn btn-danger">Deactivate Account</button>
+                </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    const avatarInput = document.getElementById("upload");
+    const avatarImg = document.getElementById("uploadedAvatar");
+
+    avatarInput.addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                avatarImg.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    function resetAvatar() {
+        avatarImg.src = "/img/avatars/1.png";
+        avatarInput.value = "";
+    }
+
+    window.addEventListener('load', function () {
+        if (avatarInput.files.length > 0) {
+            const file = avatarInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                avatarImg.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+
+
+

@@ -1,0 +1,115 @@
+@model Slasticarna.Models.Proizvod
+@{
+    ViewData["Title"] = "Uredi proizvod";
+}
+
+<h2 class="mb-4">Uredi proizvod</h2>
+
+<form asp-action="Edit" enctype="multipart/form-data">
+    <input type="hidden" asp-for="ProizvodID" />
+
+    <div class="card shadow-sm p-4">
+        <div class="row g-4">
+            <!-- Lijeva strana: slika i upload -->
+            <div class="col-md-4">
+                <div class="d-flex flex-column align-items-center">
+                    <img src="@Url.Content(Model.Thumbnail ?? "/img/products/default.jpg")"
+                         id="productPreview"
+                         class="rounded mb-3"
+                         style="width: 160px; height: 160px; object-fit: cover;" />
+
+                    <div class="text-center">
+                        <label for="uploadImage" class="btn btn-sm btn-primary mb-2">
+                            <span>Odaberi novu sliku</span>
+                            <input type="file" id="uploadImage" name="ImageFile" class="d-none" accept="image/*" />
+                        </label>
+                        <div class="text-muted small">Dozvoljeno: JPG, PNG | max 800KB</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desna strana: forma -->
+            <div class="col-md-8">
+                <div class="mb-3">
+                    <label asp-for="Naziv" class="form-label">Naziv</label>
+                    <input asp-for="Naziv" class="form-control" />
+                    <span asp-validation-for="Naziv" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Cijena" class="form-label">Cijena (KM)</label>
+                    <input asp-for="Cijena" class="form-control" />
+                    <span asp-validation-for="Cijena" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="VrstaProizvoda" class="form-label">Vrsta proizvoda</label>
+                    <select asp-for="VrstaProizvoda" class="form-select" asp-items="ViewBag.VrstaProizvoda"></select>
+                    <span asp-validation-for="VrstaProizvoda" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="PopustID" class="form-label">Popust</label>
+                    <select asp-for="PopustID" class="form-select" asp-items="ViewBag.PopustID"></select>
+                    <span asp-validation-for="PopustID" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Ocjena" class="form-label">Ocjena</label>
+                    <input asp-for="Ocjena" class="form-control" />
+                    <span asp-validation-for="Ocjena" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="NutritivnaVrijednost" class="form-label">Nutritivna vrijednost (kcal)</label>
+                    <input asp-for="NutritivnaVrijednost" class="form-control" />
+                    <span asp-validation-for="NutritivnaVrijednost" class="text-danger"></span>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" asp-for="NaStanju" />
+                    <label class="form-check-label" asp-for="NaStanju">Na stanju</label>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success">
+                        <i class="ri-save-line me-1"></i> Spremi
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">Nazad</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    const imageInput = document.getElementById("uploadImage");
+    const imagePreview = document.getElementById("productPreview");
+
+    imageInput.addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    function resetImagePreview() {
+        imagePreview.src = "/img/products/default.jpg";
+        imageInput.value = "";
+    }
+
+    window.addEventListener('load', function () {
+        if (imageInput.files.length > 0) {
+            const file = imageInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>

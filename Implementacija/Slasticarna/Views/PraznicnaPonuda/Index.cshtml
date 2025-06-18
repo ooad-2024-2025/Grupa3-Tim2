@@ -1,0 +1,34 @@
+﻿@model List<PraznicnaPonuda>
+@{
+    ViewData["Title"] = "Praznične ponude";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Praznične ponude</h2>
+    <a class="btn btn-primary" asp-action="Create">Dodaj novu</a>
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+    @foreach (var ponuda in Model)
+    {
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@ponuda.Naziv</h5>
+                    <p class="card-text">
+                        <strong>Od:</strong> @ponuda.DatumOd.ToString("dd.MM.yyyy")<br />
+                        <strong>Do:</strong> @ponuda.DatumDo.ToString("dd.MM.yyyy")
+                    </p>
+                    <p class="mb-1"><strong>Proizvodi:</strong></p>
+                    <ul>
+                        @foreach (var p in ponuda.Proizvodi.Select(pp => pp.Proizvod))
+                        {
+                            <li>@p.Naziv</li>
+                        }
+                    </ul>
+                    <a class="btn btn-danger mt-2" asp-action="Delete" asp-route-id="@ponuda.PraznicnaPonudaID">Obriši</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

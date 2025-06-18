@@ -1,0 +1,68 @@
+﻿@{
+    TempData.Keep();
+    string? currentPage = ViewContext.HttpContext.Request.Path;
+}
+<!-- Vertical Menu (visible only for Šef) -->
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+
+    <!-- App Brand -->
+    <div class="app-brand demo">
+        <a asp-controller="Home" asp-action="Index" class="app-brand-link">
+            <div class="d-flex align-items-center">
+                <img src="~/img/CakeFactory.svg" alt="Logo"
+                     class="me-2 mt-5"
+                     style="height: 80px; width: auto; object-fit: contain;">
+            </div>
+        </a>
+    </div>
+
+    <div class="menu-inner-shadow"></div>
+
+    <ul class="menu-inner py-1">
+
+        @if (ViewBag.Role == "Šef")
+        {
+            <!-- ADMIN PANEL -->
+            <li class="menu-header mt-3">
+                <span class="menu-header-text text-uppercase fw-bold fs-6 text-muted">ADMIN PANEL</span>
+            </li>
+
+            <!-- PROIZVODI -->
+            <li class="menu-item@(currentPage == "/Proizvod" ? " active" : "")">
+                <a asp-controller="Proizvod" asp-action="Index" class="menu-link">
+                    <i class="menu-icon tf-icons ri-eye-line"></i>
+                    <div>Proizvodi</div>
+                </a>
+            </li>
+            <li class="menu-item@(currentPage == "/IzvjestajProdaje" ? " active" : "")">
+                <a asp-controller="Admin" asp-action="Index" class="menu-link">
+                    <i class="menu-icon tf-icons ri-bar-chart-2-line"></i>
+                    <div>Izvještaj o prodaji</div>
+                </a>
+            </li>
+
+            <!-- PRAZNIČNE PONUDE -->
+            <li class="menu-header small text-uppercase mt-3">
+                <span class="menu-header-text">Praznične ponude</span>
+            </li>
+            <li class="menu-item@(currentPage == "/PraznicnePonude" ? " active" : "")">
+                <a asp-controller="PraznicnaPonuda" asp-action="Index" class="menu-link">
+                    <i class="menu-icon tf-icons ri-gift-line"></i>
+                    <div>Kreiranje ponude</div>
+                </a>
+            </li>
+
+            <!-- KORISNICI I RAČUNI -->
+            <li class="menu-header small text-uppercase mt-3">
+                <span class="menu-header-text">Korisnici i računi</span>
+            </li>
+            <li class="menu-item@(currentPage == "/AppUser" ? " active" : "")">
+                <a asp-controller="AppUser" asp-action="Index" class="menu-link">
+                    <i class="menu-icon tf-icons ri-user-line"></i>
+                    <div>Pregled korisnika</div>
+                </a>
+            </li>
+        }
+    </ul>
+
+</aside>

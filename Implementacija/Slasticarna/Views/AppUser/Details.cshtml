@@ -1,0 +1,31 @@
+﻿@model Slasticarna.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Detalji korisnika";
+}
+
+<h2>Detalji korisnika</h2>
+
+<div>
+    <h4>@Model.Ime @Model.Prezime</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Email</dt>
+        <dd class="col-sm-10">@Model.Email</dd>
+
+        <dt class="col-sm-2">Telefon</dt>
+        <dd class="col-sm-10">@Model.BrTelefona</dd>
+
+        <dt class="col-sm-2">Adresa</dt>
+        <dd class="col-sm-10">@Model.Adresa</dd>
+
+        <dt class="col-sm-2">Vrsta korisnika</dt>
+        <dd class="col-sm-10">@Model.VrstaKorisnika</dd>
+
+        <dt class="col-sm-2">Popust</dt>
+        <dd class="col-sm-10">@Model.Popust?.IznosPopusta %</dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">Nazad na listu</a>
+</div>

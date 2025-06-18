@@ -1,0 +1,80 @@
+@model IEnumerable<Slasticarna.Models.Proizvod>
+
+@{
+    ViewData["Title"] = "Proizvodi";
+}
+
+<h1 class="mb-4">Lista proizvoda</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">
+        <i class="ri-add-line"></i> Dodaj novi proizvod
+    </a>
+</p>
+
+<table class="table table-hover align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>#</th>
+            <th>Slika</th>
+            <th>Naziv</th>
+            <th>Cijena (KM)</th>
+            <th>Vrsta</th>
+            <th>Popust</th>
+            <th>Ocjena</th>
+            <th>Nutritivna vrijednost</th>
+            <th>Na stanju</th>
+            <th>Akcije</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            var i = 1;
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@i</td>
+                    <td>
+                        <img src="@item.Thumbnail" alt="@item.Naziv" class="rounded" style="width: 60px; height: 60px; object-fit: cover;" />
+                    </td>
+                    <td>@item.Naziv</td>
+                    <td>@String.Format("{0:0.00}", item.Cijena)</td>
+                    <td>@(item.Vrsta != null ? item.Vrsta.Naziv : "-")</td>
+                    <td>@(item.Popust != null ? item.Popust.IznosPopusta.ToString("0.00") + " %" : "-")</td>
+
+                    <td>@String.Format("{0:0.00}", item.Ocjena)</td>
+                    <td>@item.NutritivnaVrijednost</td>
+                    <td>
+                        @if (item.NaStanju)
+                        {
+                            <span class="badge bg-success">Da</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Ne</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.ProizvodID" class="btn btn-sm btn-primary" title="Uredi">
+                            <i class="ri-edit-line"></i>
+                        </a>
+                        <a asp-action="Details" asp-route-id="@item.ProizvodID" class="btn btn-sm btn-info text-white" title="Detalji">
+                            <i class="ri-eye-line"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.ProizvodID" class="btn btn-sm btn-danger" title="Obriši">
+                            <i class="ri-delete-bin-line"></i>
+                        </a>
+                    </td>
+                </tr>
+                i++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="10" class="text-center">Nema dostupnih proizvoda.</td>
+            </tr>
+        }
+    </tbody>
+</table>

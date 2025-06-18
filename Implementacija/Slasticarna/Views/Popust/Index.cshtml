@@ -1,0 +1,32 @@
+﻿@model List<Slasticarna.Models.ViewModels.PopustViewModel>
+
+@{
+    ViewData["Title"] = "Popusti";
+}
+
+<h2 class="mb-4">Aktivni popusti</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-warning">Trenutno nema aktivnih popusta.</div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <p class="card-text">
+                            Popust: <strong>@item.IznosPopusta%</strong><br />
+                            Kod: <span class="text-success">@item.KodZaPopust</span>
+                        </p>
+                        <a asp-action="Edit" asp-route-id="@item.PopustID" class="btn btn-warning btn-sm me-2">Uredi</a>
+                        <a asp-action="Delete" asp-route-id="@item.PopustID" class="btn btn-danger btn-sm">Obriši</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

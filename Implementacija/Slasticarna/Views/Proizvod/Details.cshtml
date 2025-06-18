@@ -1,0 +1,68 @@
+﻿@model Slasticarna.Models.Proizvod
+@{
+    ViewData["Title"] = "Detalji proizvoda";
+}
+
+<h2 class="mb-4">Detalji proizvoda</h2>
+
+<div class="card shadow-sm p-4">
+    <div class="row g-5 align-items-center">
+        <!-- Slika -->
+        <div class="col-md-4 d-flex justify-content-center">
+            <img src="@Model.Thumbnail" alt="@Model.Naziv" class="img-fluid rounded" style="max-height: 320px; object-fit: cover;" />
+        </div>
+
+        <!-- Podaci -->
+        <div class="col-md-8">
+            <h3 class="fw-bold mb-4">@Model.Naziv</h3>
+
+            <div class="mb-3">
+                <span class="fw-bold">Cijena:</span>
+                <span>@String.Format("{0:0.00}", Model.Cijena) KM</span>
+            </div>
+
+            <div class="mb-3">
+                <span class="fw-bold">Vrsta:</span>
+                <span>@(Model.Vrsta != null ? $"{Model.Vrsta.Naziv}%" : "Nije određeno")</span>
+            </div>
+
+            <div class="mb-3">
+                <span class="fw-bold">Popust:</span>
+                <span>
+                    @(Model.Popust != null ? $"{Model.Popust.IznosPopusta}%" : "Bez popusta")
+                </span>
+            </div>
+
+            <div class="mb-3">
+                <span class="fw-bold">Ocjena:</span>
+                <span>@String.Format("{0:0.00}", Model.Ocjena)</span>
+            </div>
+
+            <div class="mb-3">
+                <span class="fw-bold">Nutritivna vrijednost:</span>
+                <span>@Model.NutritivnaVrijednost kcal</span>
+            </div>
+
+            <div class="mb-4">
+                <span class="fw-bold">Na stanju:</span>
+                @if (Model.NaStanju)
+                {
+                    <span class="badge bg-success">Da</span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">Ne</span>
+                }
+            </div>
+
+            <div>
+                <a asp-action="Edit" asp-route-id="@Model.ProizvodID" class="btn btn-warning me-2">
+                    <i class="ri-edit-line"></i> Uredi
+                </a>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="ri-arrow-go-back-line"></i> Nazad na listu
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

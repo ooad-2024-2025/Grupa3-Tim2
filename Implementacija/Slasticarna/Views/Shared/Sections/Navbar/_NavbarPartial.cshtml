@@ -1,0 +1,115 @@
+@{
+    TempData.Keep();
+    var userJson = Context.Session.GetString("AppUser");
+    ApplicationUser user = null;
+    bool isLoggedIn = false;
+
+    if (!string.IsNullOrEmpty(userJson))
+    {
+        user = System.Text.Json.JsonSerializer.Deserialize<ApplicationUser>(userJson);
+        ViewBag.Username = user?.UserName;
+        ViewBag.Role = user?.VrstaKorisnika;
+        isLoggedIn = true;
+    }
+    else
+    {
+        ViewBag.Username = "Guest";
+        ViewBag.Role = "";
+    }
+}
+
+@if (ViewData["navbarFull"] != null)
+{
+    <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-6">
+        <a asp-controller="Home" asp-action="Index" class="app-brand-link gap-2 mt-5">
+            <img src="~/img/CF.svg" alt="Slasticarna Logo" class="app-brand-logo demo mt-4">
+            <span class="app-brand-text demo text-heading fw-semibold">@ViewData["appName"]</span>
+        </a>
+    </div>
+}
+
+@if (ViewData["navbarHideToggle"] == null)
+{
+    <div class="layout-menu-toggle navbar-nav align-items-xl-center me-4 me-xl-0 d-xl-none">
+        <a class="nav-item nav-link px-0 me-xl-6" href="javascript:void(0)">
+            <i class="ri-menu-fill ri-24px"></i>
+        </a>
+    </div>
+}
+
+<!-- RIGHT SIDE -->
+<div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+    <ul class="navbar-nav flex-row align-items-center ms-auto">
+
+        @if (isLoggedIn)
+        {
+            <!-- USER MENU -->
+            <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                        <img src="@(Url.Content(user?.AvatarPath ?? "/img/avatars/1.png"))"
+                             alt="user-avatar"
+                             class="rounded-circle"
+                             style="width: 40px; height: 40px; object-fit: cover;"
+                             id="uploadedAvatar" />
+
+
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end mt-3 py-2">
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0 me-2">
+                                    <div class="avatar avatar-online">
+                                        <img src="@(Url.Content(user?.AvatarPath ?? "/img/avatars/1.png"))"
+                                             alt="user-avatar"
+                                             class="w-px-40 h-auto rounded-circle"
+                                             id="uploadedAvatar" />
+
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0 small">@ViewBag.Username</h6>
+                                    <small class="text-muted">@ViewBag.Role</small>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li><div class="dropdown-divider"></div></li>
+
+                    <li>
+                        <a class="dropdown-item" asp-controller="AppUser" asp-action="AccountSettings">
+                            <i class="ri-user-3-line ri-22px me-2"></i>
+                            <span class="align-middle">My Profile</span>
+                        </a>
+                    </li>
+
+                    <li><div class="dropdown-divider"></div></li>
+
+                    <li>
+                        <a class="btn btn-danger d-flex" asp-area="Identity" asp-page="/Account/Logout">
+                            <small class="align-middle">Logout</small>
+                            <i class="ri-logout-box-r-line ms-2 ri-16px"></i>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        }
+        else
+        {
+            <!-- REGISTER & LOGIN -->
+            <li class="nav-item me-3">
+                <a asp-area="Identity" asp-page="/Account/Register" class="nav-link fw-semibold">
+                    Register
+                </a>
+            </li>
+            <li class="nav-item">
+                <a asp-area="Identity" asp-page="/Account/Login" class="nav-link fw-semibold">
+                    Login
+                </a>
+            </li>
+        }
+
+    </ul>
+</div>

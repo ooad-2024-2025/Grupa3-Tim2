@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Slasticarna.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Lista korisnika";
+}
+
+<h2>Lista korisnika</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ime</th>
+            <th>Prezime</th>
+            <th>Email</th>
+            <th>Broj telefona</th>
+            <th>Adresa</th>
+            <th>Vrsta korisnika</th>
+            <th>Popust</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var korisnik in Model)
+        {
+            <tr>
+                <td>@korisnik.Ime</td>
+                <td>@korisnik.Prezime</td>
+                <td>@korisnik.Email</td>
+                <td>@korisnik.BrTelefona</td>
+                <td>@korisnik.Adresa</td>
+                <td>@korisnik.VrstaKorisnika</td>
+                <td>@korisnik.Popust?.IznosPopusta %</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@korisnik.Id">Detalji</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

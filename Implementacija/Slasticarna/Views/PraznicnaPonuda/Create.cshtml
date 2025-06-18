@@ -1,0 +1,39 @@
+﻿@model Slasticarna.Models.ViewModels.PraznicnaPonudaViewModel
+@{
+    ViewData["Title"] = "Nova praznična ponuda";
+    var sviProizvodi = ViewBag.SviProizvodi as List<Proizvod>;
+}
+
+<h2>Nova praznična ponuda</h2>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label class="form-label">Naziv</label>
+        <input asp-for="Naziv" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Datum od</label>
+        <input asp-for="DatumOd" type="date" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Datum do</label>
+        <input asp-for="DatumDo" type="date" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Odaberi proizvode</label>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-2">
+            @foreach (var p in sviProizvodi)
+            {
+                <div class="col">
+                    <div class="form-check border p-2 rounded shadow-sm">
+                        <input type="checkbox" name="OdabraniProizvodi" value="@p.ProizvodID" class="form-check-input" id="p_@p.ProizvodID" />
+                        <label class="form-check-label" for="p_@p.ProizvodID">@p.Naziv</label>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">Sačuvaj</button>
+</form>

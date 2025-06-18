@@ -1,0 +1,183 @@
+﻿@{
+    ViewData["Title"] = "Dashboard - Analytics";
+    var dnevnaProdaja = ViewBag.DnevnaProdaja as List<Slasticarna.Models.DnevnaProdajaDto> ?? new List<Slasticarna.Models.DnevnaProdajaDto>();
+}
+
+@section VendorStyles {
+    <link rel="stylesheet" href="~/vendor/libs/apex-charts/apex-charts.css" />
+}
+@section VendorScripts {
+    <script src="~/vendor/libs/apex-charts/apexcharts.js"></script>
+}
+
+@if (ViewBag.Role == "Šef")
+{
+    
+    <div class="row g-4 row-cols-1 row-cols-md-2 row-cols-xl-4">
+        <!-- 4 kartice u 1. redu -->
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="avatar-initial bg-primary text-white p-3 rounded shadow">
+                        <i class="ri-shopping-bag-line ri-24px"></i>
+                    </div>
+                    <div class="ms-3">
+                        <p class="mb-0">Ukupno narudžbi</p>
+                        <h5 class="mb-0">@ViewBag.UkupnoNarudzbi</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="avatar-initial bg-success text-white p-3 rounded shadow">
+                        <i class="ri-group-line ri-24px"></i>
+                    </div>
+                    <div class="ms-3">
+                        <p class="mb-0">Kupaca</p>
+                        <h5 class="mb-0">@ViewBag.BrojKupaca</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="avatar-initial bg-warning text-white p-3 rounded shadow">
+                        <i class="ri-box-3-line ri-24px"></i>
+                    </div>
+                    <div class="ms-3">
+                        <p class="mb-0">Na stanju</p>
+                        <h5 class="mb-0">@ViewBag.ProizvodaNaStanju</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="avatar-initial bg-danger text-white p-3 rounded shadow">
+                        <i class="ri-star-smile-line ri-24px"></i>
+                    </div>
+                    <div class="ms-3">
+                        <p class="mb-0">Prosječna ocjena</p>
+                        <h5 class="mb-0">@String.Format("{0:0.00}", ViewBag.ProsjecnaOcjena)</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-1">
+        <!-- Lijevo: Ukupan prihod + graf -->
+        <div class="col-12 col-xl-6 d-flex flex-column gap-4">
+            <div class="card flex-fill">
+                <div class="card-body d-flex align-items-center">
+                    <div class="avatar-initial bg-info text-white p-3 rounded shadow">
+                        <i class="ri-money-dollar-circle-line ri-24px"></i>
+                    </div>
+                    <div class="ms-3">
+                        <p class="mb-0">Ukupan prihod</p>
+                        <h5 class="mb-0">@String.Format("{0:0.00}", ViewBag.UkupniPrihod) KM</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="card flex-fill">
+                <div class="card-header">
+                    <h5 class="mb-0">Dnevna prodaja</h5>
+                </div>
+                <div class="card-body">
+                    <div id="chart-dnevna-prodaja"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desno: Tabela -->
+        <div class="col-12 col-xl-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">Top 5 najprodavanijih proizvoda</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Proizvod</th>
+                                <th>Cijena (KM)</th>
+                                <th>Ocjena</th>
+                                <th>Slika</th>
+                                <th>Ukupno prodatih</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.TopProizvodi != null)
+                            {
+                                int i = 1;
+                                foreach (var p in ViewBag.TopProizvodi)
+                                {
+                                    <tr>
+                                        <td>@i</td>
+                                        <td>@p.Naziv</td>
+                                        <td>@String.Format("{0:0.00}", p.Cijena)</td>
+                                        <td>@String.Format("{0:0.00}", p.Ocjena)</td>
+                                        <td>
+                                            <img src="@p.Thumbnail" alt="@p.Naziv" class="rounded" style="width: 60px; height: 60px; object-fit: cover;" />
+                                        </td>
+                                        <td>@p.Kolicina</td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="6">Nema podataka</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                
+
+            </div>
+            <div class="text-end mt-4">
+                <a asp-action="ExportPdf" class="btn btn-lg btn-outline-primary">
+                    <i class="ri-download-2-line me-2"></i> Preuzmi PDF
+                </a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="text-center mt-5">
+        <h1 class="display-4">Dobrodošli u slastičarnu!</h1>
+        <p>Pogledajte našu ponudu kolača i slastica.</p>
+        <a class="btn btn-primary" href="/Proizvod">Pregledaj proizvode</a>
+        <a class="btn btn-primary" href="/Menu">Narudžba</a>
+    </div>
+}
+
+@section PageScripts {
+    <script>
+        var options = {
+            chart: {
+                type: 'line',
+                height: 250
+            },
+            series: [{
+                name: 'Ukupan prihod',
+                data: @Html.Raw(Json.Serialize(dnevnaProdaja.Select(x => x.Ukupno)))
+            }],
+            xaxis: {
+                categories: @Html.Raw(Json.Serialize(dnevnaProdaja.Select(x => x.Dan)))
+            }
+        };
+        var chart = new ApexCharts(document.querySelector("#chart-dnevna-prodaja"), options);
+        chart.render();
+    </script>
+}

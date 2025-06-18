@@ -1,0 +1,21 @@
+@{
+    TempData.Keep();
+    ViewData["containerNav"] = (ViewData["containerNav"] ??= "container-fluid");
+}
+
+<!-- Footer -->
+<footer class="content-footer footer bg-footer-theme">
+    <div class='@ViewData["containerNav"]'>
+        <div class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
+            <div class="text-body mb-2 mb-md-0">
+                © <script>document.write(new Date().getFullYear())</script> | Projekat razvijen u sklopu predmeta <strong>OOAD</strong>
+            </div>
+            <div class="d-none d-lg-inline-block">
+                <span class="footer-link me-4">ASP.NET MVC aplikacija za slastičarnu</span>
+                <span class="footer-link me-4">Svi podaci su demo</span>
+                <span class="footer-link me-4">Autor: Grupa 3, Tim 2</span>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- / Footer -->

@@ -1,0 +1,162 @@
+﻿@model IEnumerable<Slasticarna.Models.Proizvod>
+
+@{
+    ViewData["Title"] = "Menu Page";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <style>
+        /* Styling for the menu cards */
+        .menu-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 20px;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+            .menu-card .image-container {
+                position: relative;
+                height: 200px;
+                width: 100%;
+                overflow: hidden;
+            }
+
+            .menu-card .menu-image {
+                width: 100%;
+                height: auto;
+                border-radius: 10px;
+            }
+
+            .menu-card h3 {
+                margin-top: 10px;
+                font-size: 20px;
+                font-weight: bold;
+            }
+
+            .menu-card p {
+                font-size: 16px;
+                color: #6c757d;
+            }
+
+        .quantity {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+            .quantity input {
+                width: 40px;
+                text-align: center;
+                margin: 0 5px;
+            }
+
+            .quantity button {
+                background-color: #007bff;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+        .finish-order {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+            .finish-order button {
+                background-color: #28a745;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                font-size: 16px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+    </style>
+</head>
+<body>
+    <h1 style="text-align:center">The Menu</h1>
+
+    <!-- Create a grid for the menu cards -->
+    <div class="row">
+        @foreach (var product in Model)
+        {
+            <div class="col-md-3">
+                <div class="menu-card">
+                    <div class="image-container">
+                        <img src="@Url.Content(product.Thumbnail)" alt="@product.Naziv" class="menu-image" />
+                    </div>
+                    <h3>@product.Naziv</h3>
+                    <p>Price: @product.Cijena</p>
+
+                    <div class="quantity">
+                        <button class="minus-btn" data-product-id="@product.ProizvodID">-</button>
+                        <input type="number" class="quantity-input" value="0" name="quantities[@product.ProizvodID]" data-product-id="@product.ProizvodID" />
+                        <button class="plus-btn" data-product-id="@product.ProizvodID">+</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Finish Order button -->
+    <div class="finish-order">
+        <form id="order-form" method="post" action="/Menu/SubmitOrder">
+            <input type="hidden" name="userId" value="@ViewBag.UserId" />  <!-- Optional: If you want to track the user ID -->
+            <button type="submit" id="finish-order-btn" class="btn btn-success">Finish Order</button>
+        </form>
+    </div>
+
+    <script>
+        // Handle the quantity buttons
+        document.querySelectorAll('.minus-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                let input = document.querySelector(`input[data-product-id='${this.dataset.productId}']`);
+                input.value = Math.max(0, parseInt(input.value) - 1);
+            });
+        });
+
+        document.querySelectorAll('.plus-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                let input = document.querySelector(`input[data-product-id='${this.dataset.productId}']`);
+                input.value = parseInt(input.value) + 1;
+            });
+        });
+
+        // Handle form submission with quantities
+        document.getElementById('order-form').addEventListener('submit', function(event) {
+            let formData = new FormData(this);
+            let quantities = [];
+
+            document.querySelectorAll('.quantity-input').forEach(input => {
+                let quantity = input.value;
+                if (quantity > 0) {
+                    quantities.push({
+                        productId: input.dataset.productId,
+                        quantity: quantity
+                    });
+                }
+            });
+
+            // If no products are selected, prevent form submission
+            if (quantities.length === 0) {
+                event.preventDefault();
+                alert('Please select at least one product.');
+            } else {
+                formData.append("quantities", JSON.stringify(quantities));
+                this.submit();
+            }
+        });
+    </script>
+</body>
+</html>
